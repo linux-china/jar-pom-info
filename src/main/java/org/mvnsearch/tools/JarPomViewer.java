@@ -63,7 +63,7 @@ public class JarPomViewer {
             }
         }
         if (!pomFound) {
-            System.out.println("No pom.xml found in jar!");
+            System.out.println("No pom.xml found in jar file!");
         }
     }
 
