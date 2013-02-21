@@ -122,9 +122,8 @@ public class Pom {
         this.developers = developers;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public void addDeveloper(Developer developer) {
-        if (this.developers != null) {
+        if (this.developers == null) {
             developers = new ArrayList<Developer>();
         }
         developers.add(developer);
@@ -136,5 +135,58 @@ public class Pom {
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
+    }
+
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("============GAV==========================").append(System.lineSeparator());
+        buffer.append("groupId: ").append(groupId).append(System.lineSeparator());
+        buffer.append("artifactId: ").append(artifactId).append(System.lineSeparator());
+        buffer.append("version: ").append(version).append(System.lineSeparator());
+        if (name != null && !name.isEmpty()) {
+            buffer.append("============Basic========================").append(System.lineSeparator());
+            buffer.append("name: ").append(name).append(System.lineSeparator());
+            if (isNotEmpty(description)) {
+                buffer.append("description: ").append(description).append(System.lineSeparator());
+            }
+            if (isNotEmpty(url)) {
+                buffer.append("url: ").append(url).append(System.lineSeparator());
+            }
+        }
+        if (organization != null) {
+            buffer.append("============Organization=================").append(System.lineSeparator());
+            buffer.append("name: ").append(organization.getName()).append(System.lineSeparator());
+            buffer.append("url: ").append(url).append(System.lineSeparator());
+        }
+        if (developers != null && !developers.isEmpty()) {
+            buffer.append("============Developers==================").append(System.lineSeparator());
+            for (Developer developer : developers) {
+                if (isNotEmpty(developer.getId())) {
+                    buffer.append(developer.getId()).append(": ");
+                }
+                buffer.append(developer.getName());
+                if (isNotEmpty(developer.getEmail())) {
+                    buffer.append(" <").append(developer.getEmail()).append("> ");
+                }
+
+                buffer.append(System.lineSeparator());
+            }
+        }
+        if (vcsVendor != null) {
+            buffer.append("============VCS===========================").append(System.lineSeparator());
+            buffer.append("vendor: ").append(vcsVendor).append(System.lineSeparator());
+            buffer.append("url: ").append(vcsUrl).append(System.lineSeparator());
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * validate text empty
+     *
+     * @param text text
+     * @return empty mark
+     */
+    public static boolean isNotEmpty(String text) {
+        return text != null && !text.isEmpty();
     }
 }
