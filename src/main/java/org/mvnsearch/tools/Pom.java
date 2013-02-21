@@ -168,7 +168,9 @@ public class Pom {
                 if (isNotEmpty(developer.getEmail())) {
                     buffer.append(" <").append(developer.getEmail()).append("> ");
                 }
-
+                if (isNotEmpty(developer.getRoles())) {
+                    buffer.append(" ").append(developer.getRoles());
+                }
                 buffer.append(System.lineSeparator());
             }
         }
