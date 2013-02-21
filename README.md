@@ -4,7 +4,8 @@ Display pom.xml information in a jar file.
 
 ### How to install
 
-     jenv install pomviewer
+     jenv selfupdate
+     jenv install pomviewer 0.0.1
 
 ### How to use
 
