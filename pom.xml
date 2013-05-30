@@ -12,8 +12,8 @@
     <url>https://github.com/linux-china/jar-pom-info</url>
 
     <organization>
-        <name>mvnsearch</name>
-        <url>http://jvmtools.net</url>
+        <name>jenv</name>
+        <url>http://jenv.io</url>
     </organization>
 
     <properties>
