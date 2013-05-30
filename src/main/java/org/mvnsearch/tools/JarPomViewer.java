@@ -1,11 +1,13 @@
 package org.mvnsearch.tools;
 
+import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,20 +52,36 @@ public class JarPomViewer {
      */
     public static void parseJarFile(File jarFile) throws Exception {
         JarFile temp = new JarFile(jarFile);
-        boolean pomFound = false;
+        int classCount = 0;
+        int fileSize = IOUtils.toByteArray(new FileInputStream(jarFile)).length;
+        String manifest = null;
+        String pomInfo = null;
         Enumeration<JarEntry> entries = temp.entries();
         while (entries.hasMoreElements()) {
             JarEntry jarEntry = entries.nextElement();
             String name = jarEntry.getName();
+            if (name.endsWith(".class")) {
+                classCount += 1;
+            }
             if (name.endsWith("/pom.xml")) {
-                pomFound = true;
                 InputStream is = temp.getInputStream(jarEntry);
-                parsePomXml(is);
-                break;
+                pomInfo = parsePomXml(is);
+            }
+            if (name.endsWith("META-INF/MANIFEST.MF")) {
+                InputStream is = temp.getInputStream(jarEntry);
+                manifest = IOUtils.toString(is);
             }
         }
-        if (!pomFound) {
-            System.out.println("No pom.xml found in jar file!");
+        System.out.println("==========BASIC==========================");
+        System.out.println("File Size: " + fileSize);
+        System.out.println("Class Count: " + classCount);
+        if (manifest != null && !manifest.isEmpty()) {
+            System.out.println("==========MANINFEST======================");
+            System.out.println(manifest);
+        }
+        if (pomInfo != null && !pomInfo.isEmpty()) {
+            System.out.println("==========POM============================");
+            System.out.println(pomInfo);
         }
     }
 
@@ -73,7 +91,7 @@ public class JarPomViewer {
      * @param is pom.xml input stream
      * @throws Exception exception
      */
-    public static void parsePomXml(InputStream is) throws Exception {
+    public static String parsePomXml(InputStream is) throws Exception {
         SAXBuilder saxBuilder = new SAXBuilder();
         Document doc = saxBuilder.build(is);
         Element project = doc.getRootElement();
@@ -137,7 +155,7 @@ public class JarPomViewer {
                 pom.addDeveloper(developer);
             }
         }
-        System.out.println(pom.toString());
+        return pom.toString();
     }
 
 }
